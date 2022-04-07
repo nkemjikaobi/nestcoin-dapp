@@ -19,6 +19,9 @@
 			"components/*": ["./components/*"],
 			"pages/*": ["./pages/*"],
 			"styles/*": ["./styles/*"],
+			"artifacts/*": ["./artifacts/*"],
+			"helpers/*": ["./helpers/*"],
+			"context/*": ["./context/*"],
 		}
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
