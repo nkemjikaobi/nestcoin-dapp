@@ -11,7 +11,7 @@ const Profile = () => {
 	const walletContext = useContext(WalletContext);
 	const { isConnected, address } = walletContext;
 	const [withdrawModal, setWithdrawModal] = useState<boolean>(false);
-	const [backPassModal, setBackPassModal] = useState<boolean>(true);
+	const [backPassModal, setBackPassModal] = useState<boolean>(false);
 	const router = useRouter();
 	useEffect(() => {
 		let mounted = true;
