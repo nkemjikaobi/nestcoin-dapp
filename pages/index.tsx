@@ -1,8 +1,26 @@
 import BasePageLayout from 'components/BasePageLayout/BasePageLayout';
 import type { NextPage } from 'next';
 import styles from '../styles/index.module.css';
+import WalletContext from 'context/wallet/WalletContext';
+import React, { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
+	const walletContext = useContext(WalletContext);
+	const { isConnected } = walletContext;
+	const router = useRouter();
+	useEffect(() => {
+		let mounted = true;
+
+		if (mounted && isConnected) {
+			router.push('/profile');
+		}
+
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [isConnected]);
 	return (
 		<BasePageLayout>
 			<div className='flex flex-col tablet:flex-row mt-16 justify-between items-center'>

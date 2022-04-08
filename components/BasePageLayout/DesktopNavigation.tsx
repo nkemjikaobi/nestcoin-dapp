@@ -2,17 +2,23 @@ import WalletContext from 'context/wallet/WalletContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useContext } from 'react';
+import { useRouter } from "next/router";
 
 const DesktopNavigation = () => {
 	const walletContext = useContext(WalletContext);
 	const { connectWallet, isConnected, balance, disconnectWallet, web3Modal } =
 		walletContext;
+	const router = useRouter();
 
 	const handleClick = async () => {
 		if (isConnected) {
-			return await disconnectWallet(web3Modal);
+			await disconnectWallet(web3Modal);
+			router.push("/")
+			return;
 		} else {
-			return await connectWallet();
+			await connectWallet();
+			router.push('/profile');
+			return;
 		}
 	};
 	return (
