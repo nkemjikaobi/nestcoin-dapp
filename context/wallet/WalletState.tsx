@@ -97,6 +97,8 @@ const WalletState = (props: any) => {
 	//Load Contract
 	const loadContract = async (web3: any) => {
 		try {
+			console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
+			console.log(NFTJson);
 			const contract = new web3.eth.Contract(
 				NFTJson,
 				`${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`

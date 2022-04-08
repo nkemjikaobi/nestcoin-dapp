@@ -17,7 +17,7 @@ const Profile = () => {
 		let mounted = true;
 
 		if (mounted && !isConnected) {
-			router.push('/');
+			//router.push('/');
 		}
 
 		return () => {

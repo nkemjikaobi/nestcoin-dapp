@@ -18,7 +18,7 @@ const contactReducer = (state: any, action: any) => {
 				address: action.payload.accounts[0],
 				isConnected: true,
 				balance: action.payload.balance,
-				message: 'Wallet connected',
+				//message: count === '1' ? null : 'Wallet connected',
 				web3: action.payload.web3,
 				web3Modal: action.payload.web3Modal,
 				providerOptions: action.payload.providerOptions,
@@ -30,12 +30,13 @@ const contactReducer = (state: any, action: any) => {
 				contract: action.payload,
 			};
 		case DISCONNECT_WALLET:
+			const count2 = localStorage.getItem('count');
 			return {
 				...state,
 				address: null,
 				isConnected: false,
 				balance: '',
-				message: 'Wallet Disconnected',
+				//message: count2 === '1' ? null : 'Wallet Disconnected',
 				web3: null,
 				web3Modal: null,
 				providerOptions: null,

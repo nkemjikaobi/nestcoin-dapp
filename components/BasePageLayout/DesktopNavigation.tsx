@@ -2,7 +2,7 @@ import WalletContext from 'context/wallet/WalletContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useContext } from 'react';
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 
 const DesktopNavigation = () => {
 	const walletContext = useContext(WalletContext);
@@ -13,7 +13,7 @@ const DesktopNavigation = () => {
 	const handleClick = async () => {
 		if (isConnected) {
 			await disconnectWallet(web3Modal);
-			router.push("/")
+			router.push('/');
 			return;
 		} else {
 			await connectWallet();

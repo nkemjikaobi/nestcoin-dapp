@@ -13,7 +13,7 @@ const Home: NextPage = () => {
 		let mounted = true;
 
 		if (mounted && isConnected) {
-			router.push('/profile');
+			//router.push('/profile');
 		}
 
 		return () => {
