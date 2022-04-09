@@ -24,6 +24,7 @@ const BasePageLayout = ({ children, showNavigation }: IBasePageLayout) => {
 		provider,
 		web3,
 		loadContract,
+		loadTokenContract,
 		isAdmin,
 		checkAdmin,
 		address,
@@ -95,6 +96,7 @@ const BasePageLayout = ({ children, showNavigation }: IBasePageLayout) => {
 
 		if (mounted && web3 !== null) {
 			loadContract(web3);
+			loadTokenContract(web3);
 		}
 		return () => {
 			mounted = false;

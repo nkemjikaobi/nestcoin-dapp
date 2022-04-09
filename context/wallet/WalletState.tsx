@@ -10,6 +10,7 @@ import {
 	MONITOR_ACCOUNT_CHANGED,
 	MONITOR_DISCONNECT,
 	LOAD_CONTRACT,
+	LOAD_TOKEN,
 	PAY_FOR_PERKS,
 	GET_TOKEN_BALANCE,
 	CHECK_ADMIN,
@@ -19,6 +20,7 @@ import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import NFTJson from 'artifacts/nft.json';
+import TokenJson from 'artifacts/tokenCon.json';
 import convertToEther from 'helpers/convertToEther';
 
 const WalletState = (props: any) => {
@@ -34,6 +36,7 @@ const WalletState = (props: any) => {
 		providerOptions: null,
 		web3Modal: null,
 		contract: null,
+		tokenContract: null,
 		tokenBalance: '',
 		isAdmin: false,
 		numberOfTokens: '',
@@ -102,6 +105,26 @@ const WalletState = (props: any) => {
 	};
 
 	//Load Contract
+	const loadTokenContract = async (web3: any) => {
+		try {
+			// console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
+			// console.log(NFTJson);
+			const tokenContract = new web3.eth.Contract(
+				TokenJson,
+				`${process.env.NEXT_PUBLIC_TOKEN_ADDRESS}`
+			);
+			dispatch({
+				type: LOAD_TOKEN,
+				payload: tokenContract,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
 	const loadContract = async (web3: any) => {
 		try {
 			// console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
@@ -122,10 +145,11 @@ const WalletState = (props: any) => {
 		}
 	};
 
-	const payForPerks = async (contract: any, address: string, amount: any) => {
+	const payForPerks = async (tokenContract: any, address: string, amount: any) => {
 		try {
-			const response = await contract.methods
-				.payForPerks(amount)
+			console.log(tokenContract);
+			const response = await tokenContract.methods
+				.payForPerks(amount, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS)
 				.send({ from: address });
 			console.log(response);
 			// dispatch({
@@ -175,10 +199,9 @@ const WalletState = (props: any) => {
 
 	const checkAdmin = async (contract: any, address: string, router: any) => {
 		try {
-			// const response = await contract.methods
-			// 	.getTokenBalance()
-			// 	.call({ from: address });
-			const response = false;
+			const response = await contract.methods
+				.isAdmin(address)
+				.call();
 			dispatch({
 				type: CHECK_ADMIN,
 				payload: response,
@@ -258,6 +281,7 @@ const WalletState = (props: any) => {
 				providerOptions: state.providerOptions,
 				web3Modal: state.web3Modal,
 				contract: state.contract,
+				tokenContract: state.tokenContract,
 				tokenBalance: state.tokenBalance,
 				isAdmin: state.isAdmin,
 				numberOfTokens: state.numberOfTokens,
@@ -268,6 +292,7 @@ const WalletState = (props: any) => {
 				monitorAccountChanged,
 				monitorDisconnect,
 				loadContract,
+				loadTokenContract,
 				payForPerks,
 				getTokenBalance,
 				checkAdmin,

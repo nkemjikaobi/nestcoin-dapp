@@ -2,16 +2,20 @@ import React, { useState, useContext } from 'react';
 import WalletContext from 'context/wallet/WalletContext';
 import toast, { Toaster } from 'react-hot-toast';
 
-const BackPassModal = ({ setBackPassModal }: any) => {
+const BackPassModal = ({ setBackPassModal, setPassAmount }: any) => {
 	const [amount, setAmount] = useState('');
 	const walletContext = useContext(WalletContext);
-	const { payForPerks, contract, address } = walletContext;
+	const { payForPerks, tokenContract, address } = walletContext;
 
 	const handleClick = async () => {
 		if (amount === '') {
 			return toast.error('Please enter an amount');
 		}
-		await payForPerks(contract, address, amount);
+		console.log(tokenContract);
+		await payForPerks(tokenContract, address, amount);
+		setPassAmount(amount);
+		setAmount('');
+		setBackPassModal(false);
 	}
 	return (
 		<>

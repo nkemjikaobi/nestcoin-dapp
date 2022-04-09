@@ -20,6 +20,9 @@ const Admin = () => {
 	const [removeModal, setRemoveModal] = useState<boolean>(false);
 	const [amount, setAmount] = useState('');
 	const [addresses, setAddresses] = useState<any>([]);
+    const [approved, setApproved] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+
 
 	useEffect(() => {
 		let mounted = true;
@@ -43,6 +46,7 @@ const Admin = () => {
 		addresses: any[],
 		amount: string
 	) => {
+        setLoading(true);
 		if (addresses.length === 0 || amount === '') {
 			return toast.error('Some fields are empty');
 		}
@@ -51,9 +55,14 @@ const Admin = () => {
 				.rewardUsers(addresses, amount)
 				.send({ from: address });
 			toast.success('User rewarded');
+            handleTotalBalance();
+            setAmount('');
+            setAddresses([]);
 		} catch (error) {
 			toast.error((error as Error).message);
 		}
+        
+        setLoading(false);
 	};
 
 	const addNode = useClickOutside(() => {
@@ -78,8 +87,11 @@ const Admin = () => {
 						/>
 						<p className='mt-4 mb-16 text-stone-300'>{address}</p>
 						<h5 className='text-stone-500 mb-4'>Token Details:</h5>
+                        <h3 className='text-stone-500 mb-4'>{process.env.NEXT_PUBLIC_TOKEN_ADDRESS}</h3>
 						<div>
+                            
 							<div className='flex justify-between items-center py-6 px-5 border border-stone-500 rounded-md'>
+                                
 								<p className='mr-8'>Total Number of Tokens</p>
 								<p>{`${convertToEther(web3, numberOfTokens)} NCT`}</p>
 							</div>
@@ -157,7 +169,7 @@ const Admin = () => {
 									handleRewardUsers(contract, addresses, amount);
 								}}
 							>
-								Reward
+								{loading ? 'Sending Tokens ...' : 'Reward'}
 							</button>
 						</div>
 					</div>

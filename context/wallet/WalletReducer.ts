@@ -7,6 +7,7 @@ import {
 	MONITOR_ACCOUNT_CHANGED,
 	MONITOR_DISCONNECT,
 	LOAD_CONTRACT,
+	LOAD_TOKEN,
 	GET_TOKEN_BALANCE,
 	CHECK_ADMIN,
 	GET_TOTAL_NUMBER_OF_TOKENS,
@@ -31,6 +32,11 @@ const contactReducer = (state: any, action: any) => {
 			return {
 				...state,
 				contract: action.payload,
+			};
+		case LOAD_TOKEN:
+			return {
+				...state,
+				tokenContract: action.payload,
 			};
 		case CHECK_ADMIN:
 			return {

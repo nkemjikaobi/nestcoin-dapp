@@ -6,14 +6,16 @@ const WithdrawModal = ({ setWithdrawModal }: any) => {
 	const [amount, setAmount] = useState('');
 	const walletContext = useContext(WalletContext);
 
-	const { address, contract } = walletContext;
-	const handleWithdraw = async (contract: any, address: any) => {
+	const { address, tokenContract } = walletContext;
+	const handleWithdraw = async (tokenContract: any, address: any) => {
 		if (amount === '') {
 			return toast.error('Enter amount');
 		}
 		try {
-			await contract.methods.withdraw(amount).send({ from: address });
+			await tokenContract.methods.withdraw(amount, process.env.NEXT_PUBLIC_CONTRACT_ADDRESS).send({ from: address });
 			toast.success('Withdraw successful');
+			setWithdrawModal(false);
+			setAmount('');
 		} catch (error) {
 			toast.error((error as Error).message);
 		}
@@ -38,7 +40,7 @@ const WithdrawModal = ({ setWithdrawModal }: any) => {
 			<div className='mt-8 flex  flex-col items-center justify-between'>
 				<button
 					className='bg-blue-700 text-white flex items-center justify-center rounded-lg p-5 mt-4 w-full mb-4'
-					onClick={() => handleWithdraw(contract, address)}
+					onClick={() => handleWithdraw(tokenContract, address)}
 				>
 					Withdraw
 				</button>

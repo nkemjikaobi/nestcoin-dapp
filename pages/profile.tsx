@@ -13,6 +13,7 @@ const Profile = () => {
 		walletContext;
 	const [withdrawModal, setWithdrawModal] = useState<boolean>(false);
 	const [backPassModal, setBackPassModal] = useState<boolean>(false);
+	const [passAmount, setPassAmount] = useState<any>('0');
 
 	useEffect(() => {
 		let mounted = true;
@@ -63,7 +64,7 @@ const Profile = () => {
 							</div>
 							<div className='flex justify-between items-center py-6 px-5 border border-stone-500 rounded-md my-4'>
 								<p className='mr-8'>Back-stage Pass</p>
-								<p>3</p>
+								<p>{passAmount}</p>
 							</div>
 						</div>
 
@@ -121,7 +122,7 @@ const Profile = () => {
 				)}
 				{backPassModal && (
 					<div className='absolute top-1/4 left-1/4 ml-64'>
-						<BackPassModal setBackPassModal={setBackPassModal} />
+						<BackPassModal setBackPassModal={setBackPassModal} setPassAmount= {setPassAmount} />
 					</div>
 				)}
 			</>

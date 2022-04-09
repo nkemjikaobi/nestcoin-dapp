@@ -15,9 +15,11 @@ const RemoveAdminModal = ({ setRemoveModal }: any) => {
 		try {
 			await contract.methods.removeAdmin(userAddress).send({ from: address });
 			toast.success('Admin removed');
+			setRemoveModal(false);
 		} catch (error) {
 			toast.error((error as Error).message);
 		}
+		
 	};
 	return (
 		<>

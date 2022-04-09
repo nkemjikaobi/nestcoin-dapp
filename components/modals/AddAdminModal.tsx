@@ -15,9 +15,11 @@ const AddAdminModal = ({ setAddModal }: any) => {
 		try {
 			await contract.methods.addAdmin(userAddress).send({ from: address });
 			toast.success('Admin added');
+			setAddModal(false);
 		} catch (error) {
 			toast.error((error as Error).message);
 		}
+		
 	};
 
 	return (
