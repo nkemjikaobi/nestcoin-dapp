@@ -50,7 +50,7 @@ const Admin = () => {
 			await contract.methods
 				.rewardUsers(addresses, amount)
 				.send({ from: address });
-			toast.success('Admin added');
+			toast.success('User rewarded');
 		} catch (error) {
 			toast.error((error as Error).message);
 		}
