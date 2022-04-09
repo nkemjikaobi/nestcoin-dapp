@@ -20,8 +20,9 @@ const Admin = () => {
 	const [removeModal, setRemoveModal] = useState<boolean>(false);
 	const [amount, setAmount] = useState('');
 	const [addresses, setAddresses] = useState<any>([]);
-    const [approved, setApproved] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [isOwner, setIsOwner] = useState<boolean>(false);
+    const [amountOfEth, setAmountOfEth] = useState(0);
 
 
 	useEffect(() => {
@@ -29,6 +30,8 @@ const Admin = () => {
 
 		if (mounted && contract !== null) {
 			handleTotalBalance();
+            checkOwner(address);
+            getContractBalance();
 		}
 
 		return () => {
@@ -40,6 +43,26 @@ const Admin = () => {
 	const handleTotalBalance = async () => {
 		await getTotalNumberOfTokens(contract, address);
 	};
+
+    const checkOwner = async (address: any) => {
+		try {
+			const response = await contract.methods
+				.isContractOwner(address)
+				.call();
+            setIsOwner(response);
+		} catch (error) {
+			toast.error((error as Error).message);
+		}
+	};
+
+    const getContractBalance = async () => {
+        const bal = await web3.eth.getBalance(process.env.NEXT_PUBLIC_TOKEN_ADDRESS);
+        setAmountOfEth(bal);
+    }
+
+    // const sendEthtoContract = async (amount: string) => {
+    //     await web3.eth.sendTransaction({from: address, to: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS, value: web3.toWei(Number(amount),"ether")});
+    // }
 
 	const handleRewardUsers = async (
 		contract: any,
@@ -87,7 +110,9 @@ const Admin = () => {
 						/>
 						<p className='mt-4 mb-16 text-stone-300'>{address}</p>
 						<h5 className='text-stone-500 mb-4'>Token Details:</h5>
-                        <h3 className='text-stone-500 mb-4'>{process.env.NEXT_PUBLIC_TOKEN_ADDRESS}</h3>
+                        <h3 className='text-stone-300 mb-4'>{process.env.NEXT_PUBLIC_TOKEN_ADDRESS}</h3>
+                        <h5 className='text-stone-500 mb-4'>Contract ETH Balance</h5>
+                        <h2 className='text-stone-300 mb-4'>{`${amountOfEth/1000000000000000000} ETH`}</h2>
 						<div>
                             
 							<div className='flex justify-between items-center py-6 px-5 border border-stone-500 rounded-md'>
@@ -112,7 +137,7 @@ const Admin = () => {
 							>
 								Add Admin
 							</button>
-							<button
+							{isOwner && <button
 								className='bg-black text-white flex items-center justify-center rounded-lg p-5 mt-4 w-full'
 								onClick={() => {
 									setRemoveModal(true);
@@ -121,7 +146,7 @@ const Admin = () => {
 								//ref={withdrawNode}
 							>
 								Remove Admin
-							</button>
+							</button>}
 						</div>
 						<h4 className='mt-16 mb-2 text-2xl'>Reward Users</h4>
 						<p className='text-stone-300 mb-4'>
