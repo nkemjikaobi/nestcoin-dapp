@@ -178,7 +178,7 @@ const WalletState = (props: any) => {
 			// const response = await contract.methods
 			// 	.getTokenBalance()
 			// 	.call({ from: address });
-			const response = true;
+			const response = false;
 			dispatch({
 				type: CHECK_ADMIN,
 				payload: response,
