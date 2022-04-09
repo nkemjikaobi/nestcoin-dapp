@@ -7,7 +7,9 @@ import {
 	MONITOR_ACCOUNT_CHANGED,
 	MONITOR_DISCONNECT,
 	LOAD_CONTRACT,
-	GET_TOKEN_BALANCE
+	GET_TOKEN_BALANCE,
+	CHECK_ADMIN,
+	GET_TOTAL_NUMBER_OF_TOKENS,
 } from '../types';
 
 const contactReducer = (state: any, action: any) => {
@@ -30,10 +32,20 @@ const contactReducer = (state: any, action: any) => {
 				...state,
 				contract: action.payload,
 			};
+		case CHECK_ADMIN:
+			return {
+				...state,
+				isAdmin: action.payload,
+			};
 		case GET_TOKEN_BALANCE:
 			return {
 				...state,
 				tokenBalance: action.payload,
+			};
+		case GET_TOTAL_NUMBER_OF_TOKENS:
+			return {
+				...state,
+				numberOfTokens: action.payload,
 			};
 		case DISCONNECT_WALLET:
 			const count2 = localStorage.getItem('count');

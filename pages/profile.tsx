@@ -1,31 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import WalletContext from 'context/wallet/WalletContext';
-import { useRouter } from 'next/router';
 import BasePageLayout from 'components/BasePageLayout/BasePageLayout';
 import Image from 'next/image';
-import WithdrawModal from 'components/BasePageLayout/WithdrawModal';
+import WithdrawModal from 'components/modals/WithdrawModal';
 import useClickOutside from 'hooks/useClickOutside';
-import BackPassModal from 'components/BasePageLayout/BackPassModal';
+import BackPassModal from 'components/modals/BackPassModal';
 import convertToEther from 'helpers/convertToEther';
 
 const Profile = () => {
 	const walletContext = useContext(WalletContext);
-	const { isConnected, address, getTokenBalance, contract, tokenBalance, web3 } = walletContext;
+	const { address, getTokenBalance, contract, tokenBalance, web3 } =
+		walletContext;
 	const [withdrawModal, setWithdrawModal] = useState<boolean>(false);
 	const [backPassModal, setBackPassModal] = useState<boolean>(false);
-	const router = useRouter();
-	useEffect(() => {
-		let mounted = true;
-
-		if (mounted && !isConnected) {
-			router.push('/');
-		}
-
-		return () => {
-			mounted = false;
-		};
-		//eslint-disable-next-line
-	}, [isConnected]);
 
 	useEffect(() => {
 		let mounted = true;
@@ -42,7 +29,7 @@ const Profile = () => {
 
 	const handleTokenBalance = async () => {
 		await getTokenBalance(contract, address);
-	}
+	};
 
 	const withdrawNode = useClickOutside(() => {
 		setWithdrawModal(false);
@@ -102,7 +89,7 @@ const Profile = () => {
 								Withdraw
 							</button>
 						</div>
-						<div className='mt-8'>
+						{/* <div className='mt-8'>
 							<h3 className='font-bold mb-4 text-stone-500 text-2xl'>
 								Account Transactions
 							</h3>
@@ -124,7 +111,7 @@ const Profile = () => {
 								</p>
 								<p>6 months ago</p>
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</div>
 				{withdrawModal && (

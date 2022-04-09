@@ -17,7 +17,7 @@ const DesktopNavigation = () => {
 			return;
 		} else {
 			await connectWallet();
-			router.push('/profile');
+			//router.push('/profile');
 			return;
 		}
 	};

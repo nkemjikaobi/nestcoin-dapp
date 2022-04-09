@@ -2,6 +2,7 @@ import React, { Fragment, useContext, useEffect } from 'react';
 import DesktopNavigation from 'components/BasePageLayout/DesktopNavigation';
 import toast, { Toaster } from 'react-hot-toast';
 import WalletContext from 'context/wallet/WalletContext';
+import { useRouter } from 'next/router';
 
 interface IBasePageLayout {
 	children: any;
@@ -10,6 +11,7 @@ interface IBasePageLayout {
 
 const BasePageLayout = ({ children, showNavigation }: IBasePageLayout) => {
 	const walletContext = useContext(WalletContext);
+	const router = useRouter();
 
 	const {
 		connectWallet,
@@ -22,6 +24,10 @@ const BasePageLayout = ({ children, showNavigation }: IBasePageLayout) => {
 		provider,
 		web3,
 		loadContract,
+		isAdmin,
+		checkAdmin,
+		address,
+		contract,
 	} = walletContext;
 
 	const reconnectWallet = async () => {
@@ -95,6 +101,18 @@ const BasePageLayout = ({ children, showNavigation }: IBasePageLayout) => {
 		};
 		//eslint-disable-next-line
 	}, [web3]);
+	//check if admin
+	useEffect(() => {
+		let mounted = true;
+
+		if (mounted && web3 !== null && contract !== null) {
+			checkAdmin(contract, address, router);
+		}
+		return () => {
+			mounted = false;
+		};
+		//eslint-disable-next-line
+	}, [isAdmin, web3, contract]);
 	return (
 		<section>
 			{showNavigation && (

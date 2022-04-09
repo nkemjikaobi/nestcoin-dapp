@@ -11,7 +11,9 @@ import {
 	MONITOR_DISCONNECT,
 	LOAD_CONTRACT,
 	PAY_FOR_PERKS,
-	GET_TOKEN_BALANCE
+	GET_TOKEN_BALANCE,
+	CHECK_ADMIN,
+	GET_TOTAL_NUMBER_OF_TOKENS,
 } from '../types';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
@@ -32,7 +34,9 @@ const WalletState = (props: any) => {
 		providerOptions: null,
 		web3Modal: null,
 		contract: null,
-		tokenBalance: ''
+		tokenBalance: '',
+		isAdmin: false,
+		numberOfTokens: '',
 	};
 
 	const [state, dispatch] = useReducer(WalletReducer, initialState);
@@ -120,7 +124,9 @@ const WalletState = (props: any) => {
 
 	const payForPerks = async (contract: any, address: string, amount: any) => {
 		try {
-			const response = await contract.methods.payForPerks(amount).send({from: address});
+			const response = await contract.methods
+				.payForPerks(amount)
+				.send({ from: address });
 			console.log(response);
 			// dispatch({
 			// 	type: LOAD_CONTRACT,
@@ -136,13 +142,52 @@ const WalletState = (props: any) => {
 
 	const getTokenBalance = async (contract: any, address: string) => {
 		try {
-			const response = await contract.methods.getTokenBalance().call({from: address});
-			console.log('Who dey???')
-			console.log({response});
+			const response = await contract.methods
+				.getTokenBalance()
+				.call({ from: address });
 			dispatch({
 				type: GET_TOKEN_BALANCE,
 				payload: response,
 			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+	const getTotalNumberOfTokens = async (contract: any, address: string) => {
+		try {
+			const response = await contract.methods
+				.getTokenBalance()
+				.call({ from: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS });
+			dispatch({
+				type: GET_TOTAL_NUMBER_OF_TOKENS,
+				payload: response,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	const checkAdmin = async (contract: any, address: string, router: any) => {
+		try {
+			// const response = await contract.methods
+			// 	.getTokenBalance()
+			// 	.call({ from: address });
+			const response = true;
+			dispatch({
+				type: CHECK_ADMIN,
+				payload: response,
+			});
+			if (response) {
+				router.push('/admin');
+			} else {
+				router.push('/profile');
+			}
 		} catch (error) {
 			dispatch({
 				type: ERROR,
@@ -214,6 +259,8 @@ const WalletState = (props: any) => {
 				web3Modal: state.web3Modal,
 				contract: state.contract,
 				tokenBalance: state.tokenBalance,
+				isAdmin: state.isAdmin,
+				numberOfTokens: state.numberOfTokens,
 				clearError,
 				connectWallet,
 				disconnectWallet,
@@ -222,7 +269,9 @@ const WalletState = (props: any) => {
 				monitorDisconnect,
 				loadContract,
 				payForPerks,
-				getTokenBalance
+				getTokenBalance,
+				checkAdmin,
+				getTotalNumberOfTokens,
 			}}
 		>
 			{props.children}
