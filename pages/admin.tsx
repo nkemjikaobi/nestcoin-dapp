@@ -8,7 +8,7 @@ import useClickOutside from 'hooks/useClickOutside';
 import BackPassModal from 'components/BasePageLayout/BackPassModal';
 import convertToEther from 'helpers/convertToEther';
 
-const Profile = () => {
+const Admin = () => {
 	const walletContext = useContext(WalletContext);
 	const { isConnected, address, getTokenBalance, contract, tokenBalance, web3 } = walletContext;
 	const [withdrawModal, setWithdrawModal] = useState<boolean>(false);
@@ -142,4 +142,4 @@ const Profile = () => {
 	);
 };
 
-export default Profile;
+export default Admin;

@@ -10,6 +10,8 @@ import {
 	MONITOR_ACCOUNT_CHANGED,
 	MONITOR_DISCONNECT,
 	LOAD_CONTRACT,
+	PAY_FOR_PERKS,
+	GET_TOKEN_BALANCE
 } from '../types';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
@@ -30,6 +32,7 @@ const WalletState = (props: any) => {
 		providerOptions: null,
 		web3Modal: null,
 		contract: null,
+		tokenBalance: ''
 	};
 
 	const [state, dispatch] = useReducer(WalletReducer, initialState);
@@ -97,8 +100,8 @@ const WalletState = (props: any) => {
 	//Load Contract
 	const loadContract = async (web3: any) => {
 		try {
-			console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
-			console.log(NFTJson);
+			// console.log(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
+			// console.log(NFTJson);
 			const contract = new web3.eth.Contract(
 				NFTJson,
 				`${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`
@@ -106,6 +109,39 @@ const WalletState = (props: any) => {
 			dispatch({
 				type: LOAD_CONTRACT,
 				payload: contract,
+			});
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	const payForPerks = async (contract: any, address: string, amount: any) => {
+		try {
+			const response = await contract.methods.payForPerks(amount).send({from: address});
+			console.log(response);
+			// dispatch({
+			// 	type: LOAD_CONTRACT,
+			// 	payload: contract,
+			// });
+		} catch (error) {
+			dispatch({
+				type: ERROR,
+				payload: (error as Error).message,
+			});
+		}
+	};
+
+	const getTokenBalance = async (contract: any, address: string) => {
+		try {
+			const response = await contract.methods.getTokenBalance().call({from: address});
+			console.log('Who dey???')
+			console.log({response});
+			dispatch({
+				type: GET_TOKEN_BALANCE,
+				payload: response,
 			});
 		} catch (error) {
 			dispatch({
@@ -177,6 +213,7 @@ const WalletState = (props: any) => {
 				providerOptions: state.providerOptions,
 				web3Modal: state.web3Modal,
 				contract: state.contract,
+				tokenBalance: state.tokenBalance,
 				clearError,
 				connectWallet,
 				disconnectWallet,
@@ -184,6 +221,8 @@ const WalletState = (props: any) => {
 				monitorAccountChanged,
 				monitorDisconnect,
 				loadContract,
+				payForPerks,
+				getTokenBalance
 			}}
 		>
 			{props.children}
