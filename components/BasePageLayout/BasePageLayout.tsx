@@ -103,6 +103,20 @@ const BasePageLayout = ({ children, showNavigation }: IBasePageLayout) => {
 		};
 		//eslint-disable-next-line
 	}, [web3]);
+
+	// useEffect(() => {
+	// 	let mounted = true;
+
+	// 	if (mounted && web3 !== null) {
+	// 		loadTokenContract(web3);
+	// 	}
+	// 	return () => {
+	// 		mounted = false;
+	// 	};
+	// 	//eslint-disable-next-line
+	// }, [web3]);
+
+
 	//check if admin
 	useEffect(() => {
 		let mounted = true;
@@ -115,6 +129,8 @@ const BasePageLayout = ({ children, showNavigation }: IBasePageLayout) => {
 		};
 		//eslint-disable-next-line
 	}, [isAdmin, web3, contract]);
+
+	
 	return (
 		<section>
 			{showNavigation && (
