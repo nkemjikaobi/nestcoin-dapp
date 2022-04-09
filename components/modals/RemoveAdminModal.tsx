@@ -10,10 +10,7 @@ const RemoveAdminModal = ({ setRemoveModal }: any) => {
 
 	const handleRemoveadmin = async (contract: any, address: any) => {
 		try {
-			const response = await contract.methods
-				.removeAdmin(userAddress)
-				.send({ from: address });
-			console.log({ response });
+			await contract.methods.removeAdmin(userAddress).send({ from: address });
 			toast.success('Admin removed');
 		} catch (error) {
 			toast.error((error as Error).message);

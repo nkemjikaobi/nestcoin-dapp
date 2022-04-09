@@ -10,11 +10,8 @@ const AddAdminModal = ({ setAddModal }: any) => {
 
 	const handleAddAdmin = async (contract: any, address: any) => {
 		try {
-			const response = await contract.methods
-				.addAdmin(userAddress)
-				.send({ from: address });
-			console.log({ response });
-			toast.success("Admin added")
+			await contract.methods.addAdmin(userAddress).send({ from: address });
+			toast.success('Admin added');
 		} catch (error) {
 			toast.error((error as Error).message);
 		}
