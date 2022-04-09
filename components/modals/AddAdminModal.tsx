@@ -9,6 +9,9 @@ const AddAdminModal = ({ setAddModal }: any) => {
 	const { address, contract } = walletContext;
 
 	const handleAddAdmin = async (contract: any, address: any) => {
+		if (userAddress === '') {
+			return toast.error('No address detected');
+		}
 		try {
 			await contract.methods.addAdmin(userAddress).send({ from: address });
 			toast.success('Admin added');

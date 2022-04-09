@@ -8,6 +8,9 @@ import BackPassModal from 'components/modals/BackPassModal';
 import convertToEther from 'helpers/convertToEther';
 import AddAdminModal from 'components/modals/AddAdminModal';
 import RemoveAdminModal from 'components/modals/RemoveAdminModal';
+import { ReactMultiEmail, isEmail } from 'react-multi-email';
+import 'react-multi-email/style.css';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Admin = () => {
 	const walletContext = useContext(WalletContext);
@@ -15,6 +18,8 @@ const Admin = () => {
 		walletContext;
 	const [addModal, setAddModal] = useState<boolean>(false);
 	const [removeModal, setRemoveModal] = useState<boolean>(false);
+	const [amount, setAmount] = useState('');
+	const [addresses, setAddresses] = useState<any>([]);
 
 	useEffect(() => {
 		let mounted = true;
@@ -33,6 +38,24 @@ const Admin = () => {
 		await getTotalNumberOfTokens(contract, address);
 	};
 
+	const handleRewardUsers = async (
+		contract: any,
+		addresses: any[],
+		amount: string
+	) => {
+		if (addresses.length === 0 || amount === '') {
+			return toast.error('Some fields are empty');
+		}
+		try {
+			await contract.methods
+				.rewardUsers(addresses, amount)
+				.send({ from: address });
+			toast.success('Admin added');
+		} catch (error) {
+			toast.error((error as Error).message);
+		}
+	};
+
 	const addNode = useClickOutside(() => {
 		setAddModal(false);
 	});
@@ -42,6 +65,7 @@ const Admin = () => {
 	return (
 		<BasePageLayout>
 			<>
+				<Toaster position='top-right' />
 				<div className={`${addModal && 'blur-lg'} ${removeModal && 'blur-lg'}`}>
 					<h4 className='mt-8 mb-2 text-4xl'>Admin Account Info</h4>
 					<hr className='mb-8' />
@@ -85,6 +109,55 @@ const Admin = () => {
 								//ref={withdrawNode}
 							>
 								Remove Admin
+							</button>
+						</div>
+						<h4 className='mt-16 mb-2 text-2xl'>Reward Users</h4>
+						<p className='text-stone-300 mb-4'>
+							Enter the addresses you want to reward and press enter after each
+						</p>
+						<div className='w-1/3'>
+							<ReactMultiEmail
+								placeholder='Enter addresses'
+								emails={addresses}
+								onChange={(_addresses: any[]) => {
+									setAddresses(_addresses);
+								}}
+								validateEmail={email => {
+									return true; // return boolean
+								}}
+								getLabel={(
+									email: string,
+									index: number,
+									removeEmail: (index: number) => void
+								) => {
+									return (
+										<div data-tag key={index}>
+											{email}
+											<span data-tag-handle onClick={() => removeEmail(index)}>
+												×
+											</span>
+										</div>
+									);
+								}}
+							/>
+						</div>
+						<label className='block font-bold text-base mb-2 mt-4' htmlFor=''>
+							Number of tokens to reward
+						</label>
+						<input
+							type='text'
+							className='bg-zinc-900 text-white rounded-lg p-5 border border-stone-400 mb-8'
+							value={amount}
+							onChange={e => setAmount(e.target.value)}
+						/>
+						<div className='w-96'>
+							<button
+								className='bg-blue-700 text-white flex items-center justify-center rounded-lg p-5 mt-2 w-full mb-4'
+								onClick={() => {
+									handleRewardUsers(contract, addresses, amount);
+								}}
+							>
+								Reward
 							</button>
 						</div>
 					</div>

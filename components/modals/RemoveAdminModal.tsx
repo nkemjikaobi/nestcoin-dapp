@@ -9,6 +9,9 @@ const RemoveAdminModal = ({ setRemoveModal }: any) => {
 	const { address, contract } = walletContext;
 
 	const handleRemoveadmin = async (contract: any, address: any) => {
+		if (userAddress === '') {
+			return toast.error('No address detected');
+		}
 		try {
 			await contract.methods.removeAdmin(userAddress).send({ from: address });
 			toast.success('Admin removed');
